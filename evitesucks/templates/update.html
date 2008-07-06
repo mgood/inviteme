@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+{% macro list_invites(values) %}
+  {% for invite in values %}
+  <dd>{{ invite.full_name|e }} &lt;{{ invite.email|e }}&gt;</dd>
+  {% endfor %}
+{% endmacro %}
+{% block body %}
+<dl>
+  <dt>Event</dt>
+  <dd>{{ event.name|e }}</dd>
+  <dt>Start</dt>
+  <dd>{{ event.start|datetime }}</dd>
+  <dt>End</dt>
+  <dd>{{ event.end|datetime }}</dd>
+  <dt>Attending</dt>
+  {{ list_invites(attending) }}
+  <dt>Not Attending</dt>
+  {{ list_invites(not_attending) }}
+  <dt>No Response</dt>
+  {{ list_invites(no_response) }}
+</dl>
+<form method="POST" enctype="multipart/form-data">
+  <label>
+    vCard invitees
+    <input type="file" name="invitees">
+  </label>:
+  <input type="submit">
+</form>
+{% endblock %}

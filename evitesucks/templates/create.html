@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block body %}
+{{ error }}
+<form method="POST" enctype="multipart/form-data">
+  <input type="file" name="ics">
+  <input type="submit">
+</form>
+{% endblock %}

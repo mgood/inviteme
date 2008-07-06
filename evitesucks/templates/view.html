@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% macro list_invites(values) %}
+  {% for invite in values %}
+  <dd>
+    <strong>{{ invite.full_name|e }}
+    {%- if invite.attending > 1 %} (+{{invite.attending - 1}}){% endif -%}
+    </strong>
+    <p>{{ invite.comments|e }}</p>
+  </dd>
+  {% endfor %}
+{% endmacro %}
+{% block body %}
+<dl>
+  <dt>Event</dt>
+  <dd>{{ event.name|e }}</dd>
+  <dt>Start</dt>
+  <dd>{{ event.start|datetime }}</dd>
+  <dt>End</dt>
+  <dd>{{ event.end|datetime }}</dd>
+  <dt>Attending (Total: {{ total_attending }})</dt>
+  {{ list_invites(attending) }}
+  <dt>Not Attending</dt>
+  {{ list_invites(not_attending) }}
+</dl>
+<form method="POST">
+  <label>
+    Email:
+    <input type="text" name="email" value="{{ invite.email|e }}" size="30">
+  </label>
+  <label>
+    Number of additional guests:
+    <input type="text" name="guests" value="{{ guests }}" size="4">
+  </label>
+  <label>
+    Comments:<br>
+    <textarea name="comments" rows="8" cols="40">{{ invite.comments|e }}</textarea>
+  </label>
+  <input type="submit" name="yes" value="Yes, I'll be there!">
+  <input type="submit" name="no" value="Maybe next time">
+</form>
+{% endblock %}
