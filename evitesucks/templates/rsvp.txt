@@ -1,0 +1,9 @@
+{% if invite.attending == 0 %}
+{{ invite.full_name }} will not be attending {{ event.name }} 
+{% elif invite.attending == 1 %}
+{{ invite.full_name }} {% if invite.maybe %}might{% else %}will{% endif %} be attending {{ event.name }} 
+{% else %}
+{{ invite.full_name }} (+{{ invite.attending - 1 }}) {% if invite.maybe %}might{% else %}will{% endif %} be attending {{ event.name }} 
+{% endif %}
+Comments:
+  {{ invite.comments|indent(2) }}

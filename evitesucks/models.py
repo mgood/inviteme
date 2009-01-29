@@ -5,13 +5,19 @@ class Event(db.Model):
     name = db.StringProperty()
     start = db.DateTimeProperty()
     end = db.DateTimeProperty()
+    description = db.TextProperty()
+    location = db.TextProperty()
+    owner = db.UserProperty()
 
     @classmethod
     def from_vevent(cls, vevent):
         name = vevent.getChildValue('summary')
         start = vevent.getChildValue('dtstart')
         end = vevent.getChildValue('dtend')
-        return cls(name=name, start=start, end=end)
+        description = vevent.getChildValue('description')
+        location = vevent.getChildValue('location')
+        return cls(name=name, start=start, end=end, description=description,
+                   location=location)
 
 
 class Invitation(db.Model):
@@ -20,6 +26,7 @@ class Invitation(db.Model):
     email = db.EmailProperty()
     attending = db.IntegerProperty() # None = no response, 0 = No, 1+ = Yes
     comments = db.TextProperty()
+    maybe = db.BooleanProperty()
 
     @classmethod
     def from_vcard(cls, vcard, **params):
@@ -43,8 +50,9 @@ class Invitation(db.Model):
     @classmethod
     def grouped_by_response(cls, event):
         invites = cls.by_event(event)
-        attending = [inv for inv in invites if inv.attending >= 1]
+        attending = [inv for inv in invites if inv.attending >= 1 and not inv.maybe]
+        possible = [inv for inv in invites if inv.attending >= 1 and inv.maybe]
         not_attending = [inv for inv in invites if inv.attending == 0]
         no_response = [inv for inv in invites if inv.attending is None]
-        return attending, not_attending, no_response
+        return attending, possible, not_attending, no_response
 

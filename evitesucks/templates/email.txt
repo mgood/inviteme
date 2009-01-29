@@ -1,0 +1,18 @@
+{{ invite.full_name }},
+You're invited to {{ event.name }}.
+
+{{ event.description }}
+
+When:
+  {%- set duration = event.end - event.start -%}
+  {% if duration.days < 1 and duration.seconds < 10 * 60 * 60 %}
+  {{ event.start|date }} from {{ event.start|time }} until {{ event.end|time }}
+  {%- else -%}
+  From {{ event.start|datetime }} until {{ event.end|datetime }}
+  {%- endif %}
+
+Where:
+  {{ event.location|indent(2) }}
+
+RSVP:
+  {{ abs_url_for('respond', key=invite_key) }}

@@ -1,0 +1,27 @@
+{% extends 'view.html' %}
+
+{% block sidebar %}
+{% if invite.attending >= 0 %}
+<h1>Update Response</h1>
+{% else %}
+<h1>Respond</h1>
+{% endif %}
+<form method="POST">
+  <p>{{ invite.full_name|e }}</p>
+  <label>
+    Email:
+    <input type="text" name="email" value="{{ invite.email|e }}" size="30">
+  </label>
+  <label>
+    Number of additional guests:
+    <input type="text" name="guests" value="{{ guests }}" size="4">
+  </label>
+  <label>
+    Comments:<br>
+    <textarea name="comments" rows="8" cols="30">{{ invite.comments|e }}</textarea>
+  </label>
+  <input type="submit" name="yes" {% if invite.attending and not invite.maybe %}class="selected"{% endif %} value="Yes, I'll be there!">
+  <input type="submit" name="maybe" {% if invite.attending and invite.maybe %}class="selected"{% endif %} value="Lemme think about it">
+  <input type="submit" name="no" {% if invite.attending == 0 %}class="selected"{% endif %} value="Sorry, next time">
+</form>
+{% endblock %}

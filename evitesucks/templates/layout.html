@@ -1,10 +1,48 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
  "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+
 <head>
-  <title>EviteSucks</title>
+  <title>Invite Me</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <link href="/css/plain.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-  {% block body %}{% endblock %}
+  <a name="top" id="top"></a>
+  <div id="menu">
+  </div>
+
+  <div id="header">
+    <h1>Invite Me</h1>
+    <h2>A simple invitation app</h2>
+  </div>
+
+  <div id="content">
+
+    <div id="sidebar">
+      {% block sidebar %}{% endblock %}
+      {#
+      <h1>Sub Menu</h1>
+      <div class="submenu">
+        <a href="#top">Home</a>
+        <a href="#intro">Introduction</a>
+        <a href="#css">CSS &amp; XHTML</a>
+        <a href="#about">About</a>
+      </div>
+
+      <h1>Log In</h1>
+      <input type="text" value="Username" />
+      <br />
+      <input name="" type="password" value="Password" />
+      <br />
+      <input type="button" value="Log In" />
+      #}
+    </div>
+
+    <div id="mainbar">
+      {% block body %}{% endblock %}
+    </div>
+  </div>
+  <div id="footer"></div>
 </body>
 </html>

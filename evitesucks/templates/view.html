@@ -1,41 +1,45 @@
 {% extends 'layout.html' %}
 {% macro list_invites(values) %}
-  {% for invite in values %}
-  <dd>
-    <strong>{{ invite.full_name|e }}
-    {%- if invite.attending > 1 %} (+{{invite.attending - 1}}){% endif -%}
-    </strong>
-    <p>{{ invite.comments|e }}</p>
-  </dd>
-  {% endfor %}
+  {% if not values %}
+  <p>No one</p>
+  {% else %}
+  <ul class="invite-list">
+    {% for invite in values -%}
+    <li>
+      <strong>{{ invite.full_name|e }}
+      {%- if invite.attending > 1 %} (+{{invite.attending - 1}}){% endif -%}
+      </strong>
+      <p>{{ invite.comments|e|breaklines }}</p>
+    </li>
+    {%- endfor %}
+  </ul>
+  {% endif %}
 {% endmacro %}
 {% block body %}
-<dl>
-  <dt>Event</dt>
-  <dd>{{ event.name|e }}</dd>
-  <dt>Start</dt>
-  <dd>{{ event.start|datetime }}</dd>
-  <dt>End</dt>
-  <dd>{{ event.end|datetime }}</dd>
-  <dt>Attending (Total: {{ total_attending }})</dt>
+  <h1>{{ event.name|e }}</h1>
+  <p>{{ event.description|e|breaklines }}</p>
+
+  <h2>When</h2>
+  <p>
+  {% set duration = event.end - event.start %}
+  {# TODO should also fall in here if both are on the same date #}
+  {% if duration.days < 1 and duration.seconds < 10 * 60 * 60 %}
+  {{ event.start|date }} from {{ event.start|time }} until {{ event.end|time }}
+  {% else %}
+  From {{ event.start|datetime }} until {{ event.end|datetime }}
+  {% endif %}
+  </p>
+
+  <h2>Where</h2>
+  <p>{{ event.location|e|breaklines }}</p>
+
+  <h2>Attending (Total: {{ attending|attriter('attending')|sum }})</h2>
   {{ list_invites(attending) }}
-  <dt>Not Attending</dt>
+
+  <h2>Maybe (Total: {{ possible|attriter('attending')|sum }})</h2>
+  {{ list_invites(possible) }}
+
+  <h2>Not Attending</h2>
   {{ list_invites(not_attending) }}
-</dl>
-<form method="POST">
-  <label>
-    Email:
-    <input type="text" name="email" value="{{ invite.email|e }}" size="30">
-  </label>
-  <label>
-    Number of additional guests:
-    <input type="text" name="guests" value="{{ guests }}" size="4">
-  </label>
-  <label>
-    Comments:<br>
-    <textarea name="comments" rows="8" cols="40">{{ invite.comments|e }}</textarea>
-  </label>
-  <input type="submit" name="yes" value="Yes, I'll be there!">
-  <input type="submit" name="no" value="Maybe next time">
-</form>
+
 {% endblock %}
